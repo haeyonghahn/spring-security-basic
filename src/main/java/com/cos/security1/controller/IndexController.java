@@ -56,8 +56,7 @@ public class IndexController {
 		String rawPassword = user.getPassword();
 		String encPassword = bCryptPasswordEncoder.encode(rawPassword);
 		user.setPassword(encPassword);
-		// 회원가입이 잘되지만 시큐리티로 로그인을 할 수 없다. 패스워드가 암호화되어 있지 않기 때문이다.
-		userRepository.save(user);
+		userRepository.save(user);	// 회원가입이 잘되지만 시큐리티로 로그인을 할 수 없다. 패스워드가 암호화되어 있지 않기 때문이다.
 		return "redirect:/loginForm";
 	}
 }

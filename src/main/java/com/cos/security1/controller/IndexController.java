@@ -2,7 +2,6 @@ package com.cos.security1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -64,12 +63,14 @@ public class IndexController {
 		return "redirect:/loginForm";
 	}
 	
+	// @Secured => OR 조건, AND 조건 불가능
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/info")
 	public @ResponseBody String info() {
 		return "개인정보";
 	}
 	
+	// @PreAuthorize => and 조건, or 조건 모두 가능
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
 	@GetMapping("/data")
 	public @ResponseBody String data() {

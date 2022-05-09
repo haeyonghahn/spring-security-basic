@@ -9,12 +9,25 @@ import javax.persistence.Id;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Data
 public class User {
 
+	@Builder
+	public User(int id, String username, String password, String email, String role, String provider, String providerId,
+			Timestamp loginDate, Timestamp createDate) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.role = role;
+		this.provider = provider;
+		this.providerId = providerId;
+		this.loginDate = loginDate;
+		this.createDate = createDate;
+	}
 	@Id // Primary Key
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -22,6 +35,8 @@ public class User {
 	private String password;
 	private String email;
 	private String role;	// ROLE_USER, ROLE_ADMIN
+	private String provider;
+	private String providerId;
 	private Timestamp loginDate;
 	@CreationTimestamp
 	private Timestamp createDate;

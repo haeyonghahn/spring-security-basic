@@ -1,22 +1,33 @@
 server:
-  port: 8080
-  servlet:
-    context-path: /
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+   port: 8080
+   servlet:
+      context-path: /
+      encoding:
+         charset: UTF-8
+         enabled: true
+         force: true
       
 spring:
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/security?serverTimezone=Asia/Seoul
-    username: root
-    password: tiger
+   datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/security?serverTimezone=Asia/Seoul
+      username: root
+      password: tiger
 
-  jpa:
-    hibernate:
-      ddl-auto: create #create update none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    show-sql: true
+   jpa:
+      hibernate:
+         ddl-auto: update #create update none
+         naming:
+            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+         show-sql: true
+    
+   security:
+      oauth2:
+         client:
+            registration:
+               google:
+                  client-id: 1002771901782-rq46aljmkr2ddqh22rmkedo8cvlecred.apps.googleusercontent.com
+                  client-secret: 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
+                  scope:
+                  - email
+                  - profile

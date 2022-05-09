@@ -3,12 +3,16 @@ package com.cos.security1.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cos.security1.config.auth.PrincipalDetails;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 
@@ -21,6 +25,51 @@ public class IndexController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	@GetMapping("/test/login")
+	public @ResponseBody String testLogin(
+		Authentication authentication,
+		@AuthenticationPrincipal PrincipalDetails userDetails) {	// DI(의존성주입)
+		System.out.println("/test/login ================");
+		// PrincipalDetails은 UserDetails을 상속받고 있어 PrincipalDetails을 사용하고 있다.
+		PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+		System.out.println("authentication : " + principalDetails.getUser());
+		/* authentication : 
+		 * User(id=1, username=한해용, password=$2a$10$YyKRSMY5l/DEoXV3AB.yMOCSLRdvBhRNCJAFCDUJWJiHFhNRP7D0., 
+		 * email=yong80211@gmail.com, role=ROLE_USER, 			 
+		 * provider=null, providerId=null, loginDate=null, createDate=2022-05-08 21:37:26.0)
+		 */
+		System.out.println("userDetails : " + userDetails.getUser());	
+		/*
+		 * @AuthenticationPrincipal 어노테이션 user 정보를 알 수 있다.
+		 * userDetails : 
+		 * User(id=1, username=한해용, password=$2a$10$YyKRSMY5l/DEoXV3AB.yMOCSLRdvBhRNCJAFCDUJWJiHFhNRP7D0., 
+		 * email=yong80211@gmail.com, role=ROLE_USER, 
+		 * provider=null, providerId=null, loginDate=null, createDate=2022-05-08 21:37:26.0)
+		 */
+		return "세션 정보 확인하기";
+	}
+	
+	@GetMapping("/test/oauth/login")
+	public @ResponseBody String testOAuthLogin(
+		Authentication authentication,
+		@AuthenticationPrincipal OAuth2User oauth) {	// DI(의존성주입)
+		System.out.println("/test/oauth/login ================");
+		OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+		System.out.println("authentication : " + oauth2User.getAttributes());
+		/* authentication : {sub=109782179000729307295, 
+		 * name=한해용, given_name=해용, family_name=한, 
+		 * picture=https://lh3.googleusercontent.com/a/AATXAJyu3m1BtyhpFj6bYhJaiImdpk1C4dTFephjwtA=s96-c, 
+		 * email=yong80211@gmail.com, email_verified=true, locale=ko}
+		 */
+		System.out.println("oauth2User : " + oauth.getAttributes());
+		/* authentication : {sub=109782179000729307295, 
+		 * name=한해용, given_name=해용, family_name=한, 
+		 * picture=https://lh3.googleusercontent.com/a/AATXAJyu3m1BtyhpFj6bYhJaiImdpk1C4dTFephjwtA=s96-c, 
+		 * email=yong80211@gmail.com, email_verified=true, locale=ko}
+		 */
+		return "OAuth 세션 정보 확인하기";
+	}
+	
 	@GetMapping({"", "/"})
 	public String index() {
 		// 머스테치 기본폴더 src/main/resources/
@@ -29,7 +78,8 @@ public class IndexController {
 	}
 	
 	@GetMapping("/user")
-	public @ResponseBody String user() {
+	public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		System.out.println("principalDetails: " + principalDetails.getUser());
 		return "user";
 	}
 	

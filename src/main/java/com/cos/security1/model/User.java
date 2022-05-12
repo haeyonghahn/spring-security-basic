@@ -11,9 +11,11 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor // 파라미터가 없는 기본 생성자를 생성
 public class User {
 
 	@Builder

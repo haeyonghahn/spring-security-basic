@@ -23,6 +23,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 	
 	// 구글로 부터 받은 userRequest 데이터에 대한 후처리되는 함수
 	// OAuth 로그인 완료된 후 여기서 후처리한다.
+	// 함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		// registrationId로 어떤 OAuth로 로그인 했는지 확인 가능.
@@ -60,6 +61,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 		
 		User userEntity = userRepository.findByUsername(username);
 		if(userEntity == null) {
+			System.out.println("구글 로그인이 최초입니다.");
 			userEntity = User.builder()
 					.username(username)
 					.password(password)
@@ -69,6 +71,8 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 					.providerId(providerId)
 					.build();
 			userRepository.save(userEntity);
+		} else {
+			System.out.println("구글 로그인을 이미 한적이 있습니다. 당신은 자동회원가입이 되어 있습니다.");
 		}
 		// 해당 객체로 세션 정보가 생성된다.
 		return new PrincipalDetails(userEntity, oauth2User.getAttributes());

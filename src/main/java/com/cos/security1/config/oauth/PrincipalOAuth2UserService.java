@@ -71,6 +71,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 					.providerId(providerId)
 					.build();
 			userRepository.save(userEntity);
+			
 		} else {
 			System.out.println("구글 로그인을 이미 한적이 있습니다. 당신은 자동회원가입이 되어 있습니다.");
 		}

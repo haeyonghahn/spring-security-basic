@@ -287,7 +287,7 @@ facebook:
 ![scope](https://github.com/haeyonghahn/spring-security-basic/blob/master/images/scope.png)
 
 ## 페이스북과 구글 로그인 변수 명칭 다른 정보
-clientId 가 담겨있는 변수가 provider(페이스북, 구글, 네이버 등등)가 다르기 때문에 interface를 선언하여 값을 셋팅해준다.   
+clientId 가 담겨있는 변수가 provider(페이스북, 구글 등등)가 다르기 때문에 interface를 선언하여 값을 셋팅해준다.   
 또한, 쉽게 유지보수를 할 수 있다.
 ```java
 /*
@@ -362,4 +362,31 @@ String email = oAuth2UserInfo.getEmail();
 String role = "ROLE_USER";
 ...
 ...
+```
+## 네이버 로그인
+`https://developers.naver.com`접속
+![네이버로그인](https://github.com/haeyonghahn/spring-security-basic/blob/master/images/%EB%84%A4%EC%9D%B4%EB%B2%84%EB%A1%9C%EA%B7%B8%EC%9D%B8.png)
+![네이버로그인2](https://github.com/haeyonghahn/spring-security-basic/blob/master/images/%EB%84%A4%EC%9D%B4%EB%B2%84%EB%A1%9C%EA%B7%B8%EC%9D%B82.PNG)
+```yaml
+naver:
+  client-id: 
+  client-secret: 
+  scope:
+  - name
+  - email
+  client-name: Naver
+  authorization-grant-type: authorization_code
+  redirect-uri: http://localhost:8080/login/oauth2/code/naver
+```
+OAuth2 연동시 네이버는 Spring Security를 공식적으로 지원하지 않아서, 기본 설정을 따로 추가해줘야 한다. 그래서 위의 내용만 기입하고 실행시켜보면 해당 오류가 발생한다.
+![naver오류](https://github.com/haeyonghahn/spring-security-basic/blob/master/images/naver%EC%98%A4%EB%A5%98.PNG)
+
+그러므로 네이버 소셜 로그인 개발 가이드`https://developers.naver.com/docs/login/devguide/devguide.md#2-2-1-%EC%86%8C%EC%85%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8`에 따라서, 해당 내용을 기입해준다.
+```yaml
+provider:
+ naver:
+  authorization-uri: https://nid.naver.com/oauth2.0/authorize # 네이버로그인을 클릭하면 해당 주소가 호출된다.
+  token-uri: https://nid.naver.com/oauth2.0/token
+  user-info-uri: https://openapi.naver.com/v1/nid/me
+  user-name-attribute: response # 회원정보를 json으로 받는데 response라는 키값으로 네이버가 리턴해준다. getAttributes: {resultcode=00, message=success, response={id=, email=, name=한해용}}
 ```
